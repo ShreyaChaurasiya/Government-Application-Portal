@@ -88,6 +88,8 @@ const saveDraft = async () => {
 
     if (typeof activeApp.id === "string") {
 
+      console.log("Sending to backend:", activeApp);
+
       response = await createApplication(activeApp);
 
       setActiveId(response.data.id);
