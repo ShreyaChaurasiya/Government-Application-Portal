@@ -1,15 +1,29 @@
-import { useState } from "react";
 import SiteHeader from "./components/SiteHeader";
 
 import SiteFooter from "./components/SiteFooter";
 import ResourcesSection from "./components/ResourcesSection";
 import ApplicantView from "./applicant/ApplicantView";
 import ReviewerView from "./reviewer/ReviewerView";
-import seedApplications from "./data/seedApplications";
+import { useEffect, useState } from "react";
+import { getApplications } from "./services/applicationService";
 
 export default function App() {
-  const [applications, setApplications] = useState(seedApplications);
-  const [mode, setMode] = useState("applicant");
+    const [applications, setApplications] = useState([]);
+    const [mode, setMode] = useState("applicant");
+
+
+
+    useEffect(() => {
+        getApplications()
+            .then((response) => {
+                setApplications(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
+
 
   return (
     <div className="min-h-screen bg-linear-to-br from-sky-50 via-indigo-50 to-fuchsia-50 font-sans flex flex-col relative overflow-x-hidden scroll-smooth">

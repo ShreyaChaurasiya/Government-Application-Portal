@@ -25,6 +25,15 @@ export default function StepCompany({ app, setApp, errors, readOnly }) {
       <Field label="Place of Stay" required error={errors.placeOfStay}>
         <input disabled={readOnly} className={inputClass(errors.placeOfStay)} value={app.placeOfStay} onChange={set("placeOfStay")} placeholder="City, State" />
       </Field>
+        <Field label="Phone Number" required error={errors.phoneNumber}>
+            <input
+                disabled={readOnly}
+                className={inputClass(errors.phoneNumber)}
+                value={app.phoneNumber}
+                onChange={set("phoneNumber")}
+                placeholder="9876543210"
+            />
+        </Field>
     </div>
   );
 }

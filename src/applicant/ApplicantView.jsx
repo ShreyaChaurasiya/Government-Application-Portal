@@ -1,3 +1,9 @@
+import {
+  createApplication,
+  updateApplication,
+  submitApplication as submitApplicationApi,
+  getApplications
+} from "../services/applicationService";
 import { useState } from "react";
 import {
   Plus,
@@ -34,13 +40,29 @@ export default function ApplicantView({ applications, setApplications }) {
 
   // Mirrors: POST /api/applications
   const startNewApplication = () => {
+
     const app = blankApplication();
+
+    app.phoneNumber = "";
+
+    app.personnel = [];
+
+    app.declarations = {
+      compliesLaws: "",
+      hasInsurance: ""
+    };
+
     setApplications([app, ...applications]);
+
     setActiveId(app.id);
+
     setStep(1);
+
     setErrors({});
+
     setScreen("wizard");
   };
+
 
   const openApplication = (id) => {
     setActiveId(id);
@@ -50,27 +72,91 @@ export default function ApplicantView({ applications, setApplications }) {
   };
 
   const setActiveApp = (updated) => {
-    
-    setApplications(applications.map((a) => (a.id === updated.id ? { ...updated, updatedAt: new Date().toISOString() } : a)));
+    setApplications(
+        applications.map((a) =>
+            a.id === updated.id ? updated : a
+        )
+    );
   };
 
-  
-  const saveDraft = () => {
-    setActiveApp(activeApp);
-    showToast("Draft saved.");
-  };
 
-  
-  const submitApplication = () => {
-    const validationErrors = validateApplication(activeApp);
-    setErrors(validationErrors);
-    if (Object.keys(validationErrors).length > 0) {
-      showToast("Please fix the errors before submitting.");
-      return;
+const saveDraft = async () => {
+
+  try {
+
+    let response;
+
+    if (typeof activeApp.id === "string") {
+
+      response = await createApplication(activeApp);
+
+      setActiveId(response.data.id);
+
+    } else {
+
+      response = await updateApplication(activeApp.id, activeApp);
+
     }
-    setActiveApp({ ...activeApp, status: STATUS.SUBMITTED });
+
+    const refreshed = await getApplications();
+
+    setApplications(refreshed.data);
+
+    showToast("Draft saved.");
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+};
+const submitApplication = async () => {
+
+  const validationErrors = validateApplication(activeApp);
+
+  setErrors(validationErrors);
+
+  if (Object.keys(validationErrors).length > 0) {
+    showToast("Please fix the errors before submitting.");
+    return;
+  }
+
+  try {
+
+    let applicationId = activeApp.id;
+
+    // Create first if this is a brand new application
+    if (typeof applicationId === "string") {
+
+      const createResponse = await createApplication(activeApp);
+
+      applicationId = createResponse.data.id;
+
+      setActiveId(applicationId);
+    }
+
+    await submitApplicationApi(applicationId);
+
+    const refreshed = await getApplications();
+
+    setApplications(refreshed.data);
+
+
+
     showToast("Application submitted successfully.");
-  };
+
+
+    setScreen("list");
+
+  } catch (error) {
+
+    console.error(error);
+
+    showToast("Failed to submit application.");
+
+  }
+};
 
   if (screen === "list") {
     return (

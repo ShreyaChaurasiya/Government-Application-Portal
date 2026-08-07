@@ -7,21 +7,29 @@ export const nextId = (prefix) => `${prefix}-${idCounter++}`;
 export function blankApplication() {
   return {
     id: nextId("app"),
+
     companyName: "",
     address: "",
     country: "",
     projectDescription: "",
     email: "",
     placeOfStay: "",
+    phoneNumber: "",
+
     personnel: [],
+
     declarations: {
-        compliesLaws: "",
-        hasInsurance: "",
+      compliesLaws: "",
+      hasInsurance: "",
     },
+
     selfDeclaration: false,
+
     status: STATUS.DRAFT,
+
     reviewerRemarks: "",
+
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    };
+  };
 }

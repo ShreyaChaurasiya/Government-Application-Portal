@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+import {
+  approveApplication,
+  rejectApplication,
+  getApplications
+} from "../services/applicationService";
 
 import {
   ArrowLeft,
@@ -31,16 +36,44 @@ export default function ReviewerView({ applications, setApplications }) {
     setRemarks("");
   };
 
-  
-  const approve = () => {
-    setApplications(applications.map((a) => (a.id === activeApp.id ? { ...a, status: STATUS.APPROVED, reviewerRemarks: remarks, updatedAt: new Date().toISOString() } : a)));
-    showToast("Application approved.");
+
+  const approve = async () => {
+    try {
+
+      await approveApplication(activeApp.id, remarks);
+
+      const response = await getApplications();
+
+      setApplications(response.data);
+
+      setActiveId(null);
+
+      showToast("Application approved.");
+
+    } catch (error) {
+      console.error(error);
+      showToast("Failed to approve application.");
+    }
   };
 
-  
-  const reject = () => {
-    setApplications(applications.map((a) => (a.id === activeApp.id ? { ...a, status: STATUS.REJECTED, reviewerRemarks: remarks, updatedAt: new Date().toISOString() } : a)));
-    showToast("Application rejected.");
+
+  const reject = async () => {
+    try {
+
+      await rejectApplication(activeApp.id, remarks);
+
+      const response = await getApplications();
+
+      setApplications(response.data);
+
+      setActiveId(null);
+
+      showToast("Application rejected.");
+
+    } catch (error) {
+      console.error(error);
+      showToast("Failed to reject application.");
+    }
   };
 
   if (!activeApp) {
@@ -105,28 +138,42 @@ export default function ReviewerView({ applications, setApplications }) {
 
       <section className="mb-6">
         <h3 className="text-sm font-semibold text-slate-700 mb-2">Key Personnel</h3>
-        {activeApp.personnel.length === 0 ? (
-          <p className="text-sm text-slate-500">No personnel listed.</p>
+        {(!activeApp.personnel || activeApp.personnel.length === 0) ? (
+            <p className="text-sm text-slate-500">No personnel listed.</p>
         ) : (
-          <div className="space-y-2">
-            {activeApp.personnel.map((p) => (
-              <div key={p.id} className="text-sm bg-white/60 backdrop-blur-sm border border-white rounded-xl p-3 grid grid-cols-4 gap-2 shadow-sm">
-                <p>{p.name || "—"}</p>
-                <p className="text-slate-500">{p.role || "—"}</p>
-                <p className="text-slate-500">{p.nationality || "—"}</p>
-                <p className="text-slate-500">{p.dob || "—"}</p>
-              </div>
-            ))}
-          </div>
+            <div className="space-y-2">
+              {(activeApp.personnel || []).map((p, index) => (
+                  <div
+                      key={p.id || index}
+                      className="text-sm bg-white/60 backdrop-blur-sm border border-white rounded-xl p-3 grid grid-cols-4 gap-2 shadow-sm"
+                  >
+                    <p>{p.name || "—"}</p>
+                    <p className="text-slate-500">{p.role || "—"}</p>
+                    <p className="text-slate-500">{p.nationality || "—"}</p>
+                    <p className="text-slate-500">{p.dob || "—"}</p>
+                  </div>
+              ))}
+            </div>
         )}
       </section>
 
       <section className="mb-6">
         <h3 className="text-sm font-semibold text-slate-700 mb-2">Declarations</h3>
         <div className="text-sm bg-white/60 backdrop-blur-sm border border-white rounded-xl p-4 space-y-1 shadow-sm">
-          <p>Complies with local laws: <strong>{activeApp.declarations.compliesLaws || "—"}</strong></p>
-          <p>Holds liability insurance: <strong>{activeApp.declarations.hasInsurance || "—"}</strong></p>
-          <p>Self-declaration confirmed: <strong>{activeApp.selfDeclaration ? "Yes" : "No"}</strong></p>
+          <p>
+            Complies with local laws:
+            <strong> {activeApp.declarations?.compliesLaws || "—"}</strong>
+          </p>
+
+          <p>
+            Holds liability insurance:
+            <strong> {activeApp.declarations?.hasInsurance || "—"}</strong>
+          </p>
+
+          <p>
+            Self-declaration confirmed:
+            <strong> {activeApp.selfDeclaration ? "Yes" : "No"}</strong>
+          </p>
         </div>
       </section>
 
@@ -149,10 +196,12 @@ export default function ReviewerView({ applications, setApplications }) {
             </button>
           </div>
         </section>
-      ) : activeApp.reviewerRemarks ? (
-        <section className="border-t border-slate-200 pt-5">
+      ) : (activeApp.reviewerRemarks || activeApp.remarks) ? (
+          <section className="border-t border-slate-200 pt-5">
           <h3 className="text-sm font-semibold text-slate-700 mb-1">Reviewer Remarks</h3>
-          <p className="text-sm text-slate-600">{activeApp.reviewerRemarks}</p>
+            <p className="text-sm text-slate-600">
+              {activeApp.reviewerRemarks || activeApp.remarks}
+            </p>
         </section>
       ) : null}
 
