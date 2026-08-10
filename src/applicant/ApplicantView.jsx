@@ -23,6 +23,39 @@ import { STATUS } from "../utils/constants";
 import { blankApplication } from "../utils/helpers";
 import { validateApplication, validateStep } from "../utils/validation";
 
+const normalizeDate = (value) => {
+  if (!value) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  const parts = value.split(/[-/]/);
+  if (parts.length === 3) {
+    const [first, second, third] = parts;
+    if (first.length === 4) return value;
+    if (third.length === 4) return `${third}-${second.padStart(2, "0")}-${first.padStart(2, "0")}`;
+  }
+  return value;
+};
+
+const buildApplicationPayload = (app) => ({
+  companyName: app?.companyName ?? "",
+  address: app?.address ?? "",
+  country: app?.country ?? "",
+  projectDescription: app?.projectDescription ?? "",
+  email: app?.email ?? "",
+  placeOfStay: app?.placeOfStay ?? "",
+  phoneNumber: app?.phoneNumber ?? "",
+  selfDeclaration: Boolean(app?.selfDeclaration),
+  personnel: (app?.personnel || []).map((person) => ({
+    name: person?.name ?? "",
+    role: person?.role ?? "",
+    nationality: person?.nationality ?? "",
+    dateOfBirth: normalizeDate(person?.dob),
+  })),
+  declarations: {
+    compliesLaws: app?.declarations?.compliesLaws ?? "",
+    hasInsurance: app?.declarations?.hasInsurance ?? "",
+  },
+});
+
 export default function ApplicantView({ applications, setApplications }) {
   const [screen, setScreen] = useState("list"); // 'list' | 'wizard'
   const [activeId, setActiveId] = useState(null);
@@ -52,7 +85,7 @@ export default function ApplicantView({ applications, setApplications }) {
       hasInsurance: ""
     };
 
-    setApplications([app, ...applications]);
+    setApplications((prev) => [app, ...prev]);
 
     setActiveId(app.id);
 
@@ -72,8 +105,8 @@ export default function ApplicantView({ applications, setApplications }) {
   };
 
   const setActiveApp = (updated) => {
-    setApplications(
-        applications.map((a) =>
+    setApplications((prev) =>
+        prev.map((a) =>
             a.id === updated.id ? updated : a
         )
     );
@@ -83,21 +116,21 @@ export default function ApplicantView({ applications, setApplications }) {
 const saveDraft = async () => {
 
   try {
+    if (!activeApp) return;
 
+    const payload = buildApplicationPayload(activeApp);
     let response;
 
     if (typeof activeApp.id === "string") {
-
-      console.log("Sending to backend:", activeApp);
-
-      response = await createApplication(activeApp);
-
+      response = await createApplication(payload);
+      setApplications((prev) =>
+        prev.map((app) =>
+          app.id === activeApp.id ? { ...app, id: response.data.id } : app
+        )
+      );
       setActiveId(response.data.id);
-
     } else {
-
-      response = await updateApplication(activeApp.id, activeApp);
-
+      response = await updateApplication(activeApp.id, payload);
     }
 
     const refreshed = await getApplications();
@@ -107,9 +140,12 @@ const saveDraft = async () => {
     showToast("Draft saved.");
 
   } catch (error) {
-
     console.error(error);
-
+    const responseData = error?.response?.data;
+    const message = typeof responseData === "string"
+      ? responseData
+      : responseData?.message || error?.message || "Failed to save draft.";
+    showToast(message);
   }
 
 };
@@ -125,16 +161,14 @@ const submitApplication = async () => {
   }
 
   try {
+    if (!activeApp) return;
 
+    const payload = buildApplicationPayload(activeApp);
     let applicationId = activeApp.id;
 
-    // Create first if this is a brand new application
     if (typeof applicationId === "string") {
-
-      const createResponse = await createApplication(activeApp);
-
+      const createResponse = await createApplication(payload);
       applicationId = createResponse.data.id;
-
       setActiveId(applicationId);
     }
 
@@ -152,11 +186,9 @@ const submitApplication = async () => {
     setScreen("list");
 
   } catch (error) {
-
     console.error(error);
-
-    showToast("Failed to submit application.");
-
+    const message = error?.response?.data?.message || error?.message || "Failed to submit application.";
+    showToast(message);
   }
 };
 

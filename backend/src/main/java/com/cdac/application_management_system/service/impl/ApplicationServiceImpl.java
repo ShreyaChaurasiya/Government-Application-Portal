@@ -7,7 +7,11 @@ import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import com.cdac.application_management_system.dto.request.ApplicationRequestDTO;
 import com.cdac.application_management_system.dto.response.ApplicationResponseDTO;
+import com.cdac.application_management_system.entity.Application;
+import com.cdac.application_management_system.entity.Personnel;
+import com.cdac.application_management_system.entity.Declaration;
 import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
@@ -24,18 +28,23 @@ public class ApplicationServiceImpl implements ApplicationService {
     public ApplicationResponseDTO createApplication(ApplicationRequestDTO request) {
 
         Application application = modelMapper.map(request, Application.class);
-
         application.setStatus(ApplicationStatus.DRAFT);
 
-        // Set Application reference in Personnel
-        if (application.getPersonnel() != null) {
-            application.getPersonnel().forEach(personnel ->
-                    personnel.setApplication(application));
+        application.setPersonnel(new ArrayList<>());
+        if (request.getPersonnel() != null) {
+            request.getPersonnel().forEach(personnelRequest -> {
+                Personnel personnel = modelMapper.map(personnelRequest, Personnel.class);
+                personnel.setApplication(application);
+                application.getPersonnel().add(personnel);
+            });
         }
 
-        // Set Application reference in Declaration
-        if (application.getDeclarations() != null) {
-            application.getDeclarations().setApplication(application);
+        if (request.getDeclarations() != null) {
+            Declaration declaration = modelMapper.map(request.getDeclarations(), Declaration.class);
+            declaration.setApplication(application);
+            application.setDeclarations(declaration);
+        } else {
+            application.setDeclarations(null);
         }
 
         Application savedApplication = applicationRepository.save(application);
@@ -48,15 +57,30 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         Application existingApplication = getApplicationEntityById(id);
 
-        modelMapper.map(request, existingApplication);
+        existingApplication.setCompanyName(request.getCompanyName());
+        existingApplication.setAddress(request.getAddress());
+        existingApplication.setCountry(request.getCountry());
+        existingApplication.setProjectDescription(request.getProjectDescription());
+        existingApplication.setEmail(request.getEmail());
+        existingApplication.setPlaceOfStay(request.getPlaceOfStay());
+        existingApplication.setPhoneNumber(request.getPhoneNumber());
+        existingApplication.setSelfDeclaration(request.isSelfDeclaration());
 
-        if (existingApplication.getPersonnel() != null) {
-            existingApplication.getPersonnel().forEach(personnel ->
-                    personnel.setApplication(existingApplication));
+        existingApplication.getPersonnel().clear();
+        if (request.getPersonnel() != null) {
+            request.getPersonnel().forEach(personnelRequest -> {
+                Personnel personnel = modelMapper.map(personnelRequest, Personnel.class);
+                personnel.setApplication(existingApplication);
+                existingApplication.getPersonnel().add(personnel);
+            });
         }
 
-        if (existingApplication.getDeclarations() != null) {
-            existingApplication.getDeclarations().setApplication(existingApplication);
+        if (request.getDeclarations() != null) {
+            Declaration declaration = modelMapper.map(request.getDeclarations(), Declaration.class);
+            declaration.setApplication(existingApplication);
+            existingApplication.setDeclarations(declaration);
+        } else {
+            existingApplication.setDeclarations(null);
         }
 
         Application updatedApplication = applicationRepository.save(existingApplication);
@@ -94,11 +118,57 @@ public class ApplicationServiceImpl implements ApplicationService {
             throw new RuntimeException("Only draft applications can be submitted.");
         }
 
+        validateForSubmission(application);
+
         application.setStatus(ApplicationStatus.SUBMITTED);
 
         Application updatedApplication = applicationRepository.save(application);
 
         return modelMapper.map(updatedApplication, ApplicationResponseDTO.class);
+    }
+
+    private void validateForSubmission(Application application) {
+        if (application.getCompanyName() == null || application.getCompanyName().isBlank()) {
+            throw new RuntimeException("Company name is required.");
+        }
+
+        if (application.getAddress() == null || application.getAddress().isBlank()) {
+            throw new RuntimeException("Address is required.");
+        }
+
+        if (application.getCountry() == null || application.getCountry().isBlank()) {
+            throw new RuntimeException("Country is required.");
+        }
+
+        if (application.getProjectDescription() == null || application.getProjectDescription().isBlank()) {
+            throw new RuntimeException("Project description is required.");
+        }
+
+        if (application.getEmail() == null || application.getEmail().isBlank()) {
+            throw new RuntimeException("Email is required.");
+        }
+
+        if (application.getPlaceOfStay() == null || application.getPlaceOfStay().isBlank()) {
+            throw new RuntimeException("Place of stay is required.");
+        }
+
+        if (application.getPhoneNumber() == null || !application.getPhoneNumber().matches("^[0-9]{10}$")) {
+            throw new RuntimeException("Phone number must contain exactly 10 digits.");
+        }
+
+        if (application.getPersonnel() == null || application.getPersonnel().isEmpty()) {
+            throw new RuntimeException("Add at least one key personnel entry.");
+        }
+
+        if (application.getDeclarations() == null
+                || application.getDeclarations().getCompliesLaws() == null
+                || application.getDeclarations().getHasInsurance() == null) {
+            throw new RuntimeException("Declarations are required.");
+        }
+
+        if (!application.isSelfDeclaration()) {
+            throw new RuntimeException("Self declaration must be accepted.");
+        }
     }
 
     @Override

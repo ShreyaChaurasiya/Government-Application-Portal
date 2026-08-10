@@ -44,10 +44,7 @@ export default function SiteHeader({ mode, setMode }) {
       {/* Nav strip */}
       <div className="border-t border-white/60 bg-white/40">
         <nav className="max-w-5xl mx-auto px-6 h-10 flex items-center gap-6 text-sm text-slate-600">
-          <a href="#" className="text-indigo-700 font-semibold">Home</a>
-          <a href="#" className="hover:text-indigo-600 transition">My Applications</a>
-          <a href="#" className="hover:text-indigo-600 transition">Guidelines</a>
-          <a href="#" className="hover:text-indigo-600 transition">Help &amp; Support</a>
+          <a href="#" className="text-indigo-700 font-semibold">Home Page</a>
         </nav>
       </div>
     </header>

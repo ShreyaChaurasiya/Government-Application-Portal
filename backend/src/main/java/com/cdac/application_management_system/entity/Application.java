@@ -25,25 +25,25 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "company_name", nullable = false)
+    @Column(name = "company_name")
     private String companyName;
 
-    @Column(nullable = false)
+    @Column
     private String address;
 
-    @Column(nullable = false)
+    @Column
     private String country;
 
-    @Column(nullable = false)
+    @Column
     private String projectDescription;
 
-    @Column(nullable = false, unique = true)
+    @Column
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String placeOfStay;
 
-    @Column(nullable = false,length = 15)
+    @Column(length = 15)
     private String phoneNumber;
 
     @Column(nullable = false)

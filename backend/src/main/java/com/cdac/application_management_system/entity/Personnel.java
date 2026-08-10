@@ -25,16 +25,16 @@ public class Personnel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String role;
 
-    @Column(nullable = false)
+    @Column
     private String nationality;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate dateOfBirth;
 
     @ManyToOne(fetch = FetchType.LAZY)

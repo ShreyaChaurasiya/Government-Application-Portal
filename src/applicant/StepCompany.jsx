@@ -28,6 +28,7 @@ export default function StepCompany({ app, setApp, errors, readOnly }) {
         <Field label="Phone Number" required error={errors.phoneNumber}>
             <input
                 disabled={readOnly}
+                type="tel"
                 className={inputClass(errors.phoneNumber)}
                 value={app.phoneNumber}
                 onChange={set("phoneNumber")}

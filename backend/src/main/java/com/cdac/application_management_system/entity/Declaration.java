@@ -17,10 +17,10 @@ public class Declaration {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String compliesLaws;
 
-    @Column(nullable = false)
+    @Column
     private String hasInsurance;
 
     @OneToOne(mappedBy = "declarations")
