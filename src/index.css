@@ -1,5 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
-
+ 
+:root {
+  --ink: #1b2430;
+  --ink-soft: #4a5262;
+  --paper: #eff1ec;
+  --paper-card: #f8f8f5;
+  --line: #d8d6cc;
+  --accent: #7a2e2e;      /* stamp red */
+  --accent-soft: #f2e6e2;
+  --brass: #a67c27;
+  --approve: #2f6f4f;
+  --approve-soft: #e5efe9;
+  --reject: #7a2e2e;
+  --reject-soft: #f2e6e2;
+}
+ 
 html,
 body,
 #root {
@@ -8,8 +24,86 @@ body,
   width: 100%;
   min-height: 100%;
 }
-
+ 
 body {
-  font-family: Inter, system-ui, sans-serif;
-  background: #f8fafc;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+}
+ 
+.font-display {
+  font-family: "Source Serif 4", Georgia, serif;
+}
+ 
+.font-mono {
+  font-family: "IBM Plex Mono", monospace;
+}
+ 
+.btn-primary {
+  font-family: "IBM Plex Sans", sans-serif;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+.btn-primary:hover { background: var(--accent); border-color: var(--accent); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+ 
+.btn-outline {
+  font-family: "IBM Plex Sans", sans-serif;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.btn-outline:hover { border-color: var(--ink); }
+ 
+.btn-approve {
+  background: var(--approve);
+  color: white;
+  border: 1px solid var(--approve);
+  border-radius: 3px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.btn-approve:hover { opacity: 0.9; }
+ 
+.btn-reject {
+  background: var(--reject);
+  color: white;
+  border: 1px solid var(--reject);
+  border-radius: 3px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.btn-reject:hover { opacity: 0.9; }
+ 
+.card-panel {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+ 
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border: 1.5px double currentColor;
+  border-radius: 2px;
 }

@@ -1,14 +1,18 @@
 import React, { useState } from "react";
-
+ 
 export default function FaqItem({ question, answer }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border border-white bg-white/60 backdrop-blur-sm rounded-xl p-4 shadow-sm">
-      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between text-left font-medium text-slate-800">
+    <div className="card-panel p-4">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between text-left font-medium"
+        style={{ color: "var(--ink)" }}
+      >
         {question}
-        <span className="text-indigo-600 text-lg">{open ? "−" : "+"}</span>
+        <span className="font-mono text-lg" style={{ color: "var(--accent)" }}>{open ? "−" : "+"}</span>
       </button>
-      {open && <p className="text-sm text-slate-600 mt-2 leading-relaxed">{answer}</p>}
+      {open && <p className="text-sm mt-2 leading-relaxed" style={{ color: "var(--ink-soft)" }}>{answer}</p>}
     </div>
   );
 }

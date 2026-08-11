@@ -1,6 +1,7 @@
 import Field from "../components/Field";
 import inputClass from "../utils/inputClass";
 
+
 export default function StepCompany({ app, setApp, errors, readOnly }) {
   const set = (field) => (e) => setApp({ ...app, [field]: e.target.value });
   return (

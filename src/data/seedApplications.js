@@ -1,5 +1,5 @@
 import { STATUS } from "../utils/constants";
-
+ 
 const seedApplications = [
   {
     id: "app-1",
@@ -39,5 +39,5 @@ const seedApplications = [
     updatedAt: "2026-07-30T09:00:00Z",
   },
 ];
-
+ 
 export default seedApplications;
