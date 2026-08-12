@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   approveApplication,
   rejectApplication,
@@ -23,7 +23,11 @@ export default function ReviewerView({ applications, setApplications }) {
  
   const list = applications
     .filter((a) => a.status !== STATUS.DRAFT)
-    .sort((a, b) => (a.status === STATUS.SUBMITTED ? -1 : 1));
+    .sort((a, b) => {
+      if (a.status === STATUS.SUBMITTED && b.status !== STATUS.SUBMITTED) return -1;
+      if (b.status === STATUS.SUBMITTED && a.status !== STATUS.SUBMITTED) return 1;
+      return 0;
+    });
   const activeApp = applications.find((a) => a.id === activeId);
  
   const openApp = (id) => {

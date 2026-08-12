@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PortalLogo from "../components/PortalLogo";
 import inputClass from "../utils/inputClass";
 import { signup as signupApi } from "../services/authService";
+import { getApiErrorMessage } from "../utils/apiError";
 import { useAuth } from "../context/AuthContext";
  
 export default function SignupPage() {
@@ -23,7 +24,7 @@ export default function SignupPage() {
       login(response.data);
       navigate("/app");
     } catch (err) {
-      const message = err?.response?.data?.message || "Could not create your account.";
+      const message = getApiErrorMessage(err, "Could not create your account.");
       setError(message);
     } finally {
       setSubmitting(false);
@@ -43,10 +44,13 @@ export default function SignupPage() {
  
       <div className="flex-1 flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm">
-          <p className="font-mono text-xs tracking-widest uppercase mb-2" style={{ color: "var(--brass)" }}>Register</p>
-          <h1 className="font-display text-2xl font-semibold mb-6" style={{ color: "var(--ink)" }}>
+          <p className="font-mono text-xs tracking-widest uppercase mb-2" style={{ color: "var(--brass)" }}>Step 1 — Sign up</p>
+          <h1 className="font-display text-2xl font-semibold mb-2" style={{ color: "var(--ink)" }}>
             Create your account
           </h1>
+          <p className="text-sm mb-6" style={{ color: "var(--ink-soft)" }}>
+            After this, you can log in and register your company project.
+          </p>
  
           <form onSubmit={handleSubmit} className="card-panel p-6">
             <label className="block text-sm mb-1.5" style={{ color: "var(--ink-soft)" }}>Full name</label>

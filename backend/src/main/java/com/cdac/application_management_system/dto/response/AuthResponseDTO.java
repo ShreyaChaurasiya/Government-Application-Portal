@@ -1,4 +1,5 @@
 package com.cdac.application_management_system.dto.response;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,17 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonnelResponseDTO {
+public class AuthResponseDTO {
 
-    private Long id;
-
+    private String token;
     private String name;
-
-    private String role;
-
     private String email;
-
-    private String nationality;
-
-    private String dob;
+    private String role;
 }

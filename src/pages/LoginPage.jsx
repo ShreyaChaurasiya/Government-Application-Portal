@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PortalLogo from "../components/PortalLogo";
 import inputClass from "../utils/inputClass";
 import { login as loginApi } from "../services/authService";
+import { getApiErrorMessage } from "../utils/apiError";
 import { useAuth } from "../context/AuthContext";
  
 export default function LoginPage() {
@@ -22,7 +23,7 @@ export default function LoginPage() {
       login(response.data);
       navigate("/app");
     } catch (err) {
-      const message = err?.response?.data?.message || "Incorrect email or password.";
+      const message = getApiErrorMessage(err, "Incorrect email or password.");
       setError(message);
     } finally {
       setSubmitting(false);
@@ -42,10 +43,13 @@ export default function LoginPage() {
  
       <div className="flex-1 flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm">
-          <p className="font-mono text-xs tracking-widest uppercase mb-2" style={{ color: "var(--brass)" }}>Sign in</p>
-          <h1 className="font-display text-2xl font-semibold mb-6" style={{ color: "var(--ink)" }}>
+          <p className="font-mono text-xs tracking-widest uppercase mb-2" style={{ color: "var(--brass)" }}>Step 2 — Log in</p>
+          <h1 className="font-display text-2xl font-semibold mb-2" style={{ color: "var(--ink)" }}>
             Welcome back
           </h1>
+          <p className="text-sm mb-6" style={{ color: "var(--ink-soft)" }}>
+            Sign in to register your company or continue an existing application.
+          </p>
  
           <form onSubmit={handleSubmit} className="card-panel p-6">
             <label className="block text-sm mb-1.5" style={{ color: "var(--ink-soft)" }}>Email</label>
@@ -78,7 +82,7 @@ export default function LoginPage() {
  
           <p className="text-sm text-center mt-5" style={{ color: "var(--ink-soft)" }}>
             No account yet?{" "}
-            <Link to="/signup" className="font-medium" style={{ color: "var(--accent)" }}>Register a company</Link>
+            <Link to="/signup" className="font-medium" style={{ color: "var(--accent)" }}>Create an account</Link>
           </p>
         </div>
       </div>

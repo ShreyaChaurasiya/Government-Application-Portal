@@ -1,7 +1,7 @@
-import React from "react";
+import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, HelpCircle } from "lucide-react";
 import PortalLogo from "./PortalLogo";
- 
+
 export default function SiteFooter() {
   return (
     <footer className="mt-16" style={{ background: "var(--ink)", color: "#c7cbd4" }}>
@@ -15,17 +15,17 @@ export default function SiteFooter() {
             A single window for companies to register projects and for reviewers to approve or reject submissions.
           </p>
         </div>
- 
+
         <div>
           <p className="text-white font-medium mb-3">Quick Links</p>
           <ul className="space-y-2">
-            <li><a href="#" className="hover:text-white transition">Home</a></li>
-            <li><a href="#" className="hover:text-white transition">Start an Application</a></li>
-            <li><a href="#" className="hover:text-white transition">Track Status</a></li>
-            <li><a href="#" className="hover:text-white transition">Reviewer Login</a></li>
+            <li><Link to="/" className="hover:text-white transition">Home</Link></li>
+            <li><Link to="/signup" className="hover:text-white transition">Sign up</Link></li>
+            <li><Link to="/login" className="hover:text-white transition">Log in</Link></li>
+            <li><Link to="/app" className="hover:text-white transition">Company registration</Link></li>
           </ul>
         </div>
- 
+
         <div>
           <p className="text-white font-medium mb-3">Resources</p>
           <ul className="space-y-2">
@@ -35,7 +35,7 @@ export default function SiteFooter() {
             <li><a href="#privacy" className="hover:text-white transition">Privacy Policy</a></li>
           </ul>
         </div>
- 
+
         <div>
           <p className="text-white font-medium mb-3">Contact</p>
           <ul className="space-y-2">
@@ -45,7 +45,7 @@ export default function SiteFooter() {
           </ul>
         </div>
       </div>
- 
+
       <div className="border-t" style={{ borderColor: "rgba(255,255,255,0.1)" }}>
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between text-xs" style={{ color: "#8b90a0" }}>
           <span>© {new Date().getFullYear()} Company Application Portal. All rights reserved.</span>

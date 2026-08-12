@@ -1,4 +1,3 @@
-import React from "react";
 import FaqItem from "./FaqItem";
  
 export default function ResourcesSection() {
