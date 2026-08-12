@@ -11,6 +11,7 @@ export function blankApplication() {
     companyName: "",
     address: "",
     country: "",
+    projectName: "",
     projectDescription: "",
     email: "",
     placeOfStay: "",

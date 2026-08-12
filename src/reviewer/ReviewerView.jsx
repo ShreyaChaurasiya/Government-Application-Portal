@@ -116,6 +116,7 @@ export default function ReviewerView({ applications, setApplications }) {
           <p><span style={{ color: "var(--ink-soft)" }}>Country:</span> {activeApp.country || "—"}</p>
           <p><span style={{ color: "var(--ink-soft)" }}>Email:</span> {activeApp.email || "—"}</p>
           <p><span style={{ color: "var(--ink-soft)" }}>Place of Stay:</span> {activeApp.placeOfStay || "—"}</p>
+          <p><span style={{ color: "var(--ink-soft)" }}>Project Name:</span> {activeApp.projectName || "—"}</p>
           <p className="col-span-2"><span style={{ color: "var(--ink-soft)" }}>Project Description:</span> {activeApp.projectDescription || "—"}</p>
         </div>
       </section>

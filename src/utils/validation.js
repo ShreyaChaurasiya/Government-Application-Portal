@@ -51,17 +51,18 @@ export function validatePersonnel(person) {
  
 export function validateApplication(app) {
   const errors = {};
-  if (!app.companyName.trim()) errors.companyName = "Company name is required.";
-  if (!app.address.trim()) errors.address = "Address is required.";
-  if (!app.country.trim()) errors.country = "Country is required.";
-  if (!app.projectDescription.trim()) errors.projectDescription = "Project description is required.";
-  if (!app.email.trim()) {
+  if (!app.companyName?.trim()) errors.companyName = "Company name is required.";
+  if (!app.address?.trim()) errors.address = "Address is required.";
+  if (!app.country?.trim()) errors.country = "Country is required.";
+  if (!app.projectName?.trim()) errors.projectName = "Project name is required.";
+  if (!app.projectDescription?.trim()) errors.projectDescription = "Project description is required.";
+  if (!app.email?.trim()) {
     errors.email = "Email is required.";
   } else if (!EMAIL_REGEX.test(app.email)) {
     errors.email = "Enter a valid email address.";
   }
-  if (!app.placeOfStay.trim()) errors.placeOfStay = "Place of stay is required.";
-  if (!app.phoneNumber.trim()) {
+  if (!app.placeOfStay?.trim()) errors.placeOfStay = "Place of stay is required.";
+  if (!app.phoneNumber?.trim()) {
     errors.phoneNumber = "Phone number is required.";
   } else if (!/^[0-9]{10}$/.test(app.phoneNumber)) {
     errors.phoneNumber = "Phone number must contain exactly 10 digits.";
@@ -91,17 +92,18 @@ export function validateApplication(app) {
 export function validateStep(step, app) {
   const errors = {};
   if (step === 1) {
-    if (!app.companyName.trim()) errors.companyName = "Company name is required.";
-    if (!app.address.trim()) errors.address = "Address is required.";
-    if (!app.country.trim()) errors.country = "Country is required.";
-    if (!app.projectDescription.trim()) errors.projectDescription = "Project description is required.";
-    if (!app.email.trim()) {
+    if (!app.companyName?.trim()) errors.companyName = "Company name is required.";
+    if (!app.address?.trim()) errors.address = "Address is required.";
+    if (!app.country?.trim()) errors.country = "Country is required.";
+    if (!app.projectName?.trim()) errors.projectName = "Project name is required.";
+    if (!app.projectDescription?.trim()) errors.projectDescription = "Project description is required.";
+    if (!app.email?.trim()) {
       errors.email = "Email is required.";
     } else if (!EMAIL_REGEX.test(app.email)) {
       errors.email = "Enter a valid email address.";
     }
-    if (!app.placeOfStay.trim()) errors.placeOfStay = "Place of stay is required.";
-    if (!app.phoneNumber.trim()) {
+    if (!app.placeOfStay?.trim()) errors.placeOfStay = "Place of stay is required.";
+    if (!app.phoneNumber?.trim()) {
       errors.phoneNumber = "Phone number is required.";
     } else if (!/^[0-9]{10}$/.test(app.phoneNumber)) {
       errors.phoneNumber = "Phone number must contain exactly 10 digits.";

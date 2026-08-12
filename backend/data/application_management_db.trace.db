@@ -488,3 +488,15 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: C:/Users/somic/O
 	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:291)
 	... 151 more
+2026-08-12 11:52:46.580190+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "PROJECT_DESCRIPTION CHARACTER VARYING(255)": "'Sehat Sahayata is healthcare platform that helps users get quick healthcare gui... (271)"; SQL statement:
+insert into application (address,company_name,country,created_at,declaration_id,email,phone_number,place_of_stay,project_description,remarks,self_declaration,status,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,default) [22001-240]
+2026-08-12 11:52:52.541694+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "PROJECT_DESCRIPTION CHARACTER VARYING(255)": "'Sehat Sahayata is healthcare platform that helps users get quick healthcare gui... (271)"; SQL statement:
+insert into application (address,company_name,country,created_at,declaration_id,email,phone_number,place_of_stay,project_description,remarks,self_declaration,status,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,default) [22001-240]
+2026-08-12 11:52:53.779946+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "PROJECT_DESCRIPTION CHARACTER VARYING(255)": "'Sehat Sahayata is healthcare platform that helps users get quick healthcare gui... (271)"; SQL statement:
+insert into application (address,company_name,country,created_at,declaration_id,email,phone_number,place_of_stay,project_description,remarks,self_declaration,status,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,default) [22001-240]
+2026-08-12 11:52:56.470995+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "PROJECT_DESCRIPTION CHARACTER VARYING(255)": "'Sehat Sahayata is healthcare platform that helps users get quick healthcare gui... (271)"; SQL statement:
+insert into application (address,company_name,country,created_at,declaration_id,email,phone_number,place_of_stay,project_description,remarks,self_declaration,status,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,default) [22001-240]

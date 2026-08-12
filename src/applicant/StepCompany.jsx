@@ -20,6 +20,9 @@ export default function StepCompany({ app, setApp, errors, readOnly }) {
           <input disabled={readOnly} type="email" className={inputClass(errors.email)} value={app.email} onChange={set("email")} placeholder="name@company.com" />
         </Field>
       </div>
+      <Field label="Project Name" required error={errors.projectName}>
+        <input disabled={readOnly} className={inputClass(errors.projectName)} value={app.projectName} onChange={set("projectName")} placeholder="e.g. Autonomous Warehouse Drone Pilot" />
+      </Field>
       <Field label="Project Description" required error={errors.projectDescription}>
         <textarea disabled={readOnly} rows={3} className={inputClass(errors.projectDescription)} value={app.projectDescription} onChange={set("projectDescription")} placeholder="Briefly describe the project" />
       </Field>

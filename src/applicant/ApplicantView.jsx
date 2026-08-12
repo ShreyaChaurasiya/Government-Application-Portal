@@ -34,6 +34,7 @@ const buildApplicationPayload = (app) => ({
   companyName: app?.companyName ?? "",
   address: app?.address ?? "",
   country: app?.country ?? "",
+  projectName: app?.projectName ?? "",
   projectDescription: app?.projectDescription ?? "",
   email: app?.email ?? "",
   placeOfStay: app?.placeOfStay ?? "",

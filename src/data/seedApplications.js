@@ -6,6 +6,7 @@ const seedApplications = [
     companyName: "Nimbus Robotics Pvt Ltd",
     address: "14 MG Road, Sector 5",
     country: "India",
+    projectName: "Warehouse Drone Pilot",   // add to app-1 // add to app-2
     projectDescription: "Autonomous warehouse drone pilot program.",
     email: "contact@nimbusrobotics.io",
     placeOfStay: "",
@@ -24,6 +25,7 @@ const seedApplications = [
     companyName: "Solara Energy Systems",
     address: "22 Industrial Estate, Whitefield",
     country: "India",
+    projectName: "Rooftop Solar Micro-grid",
     projectDescription: "Rooftop solar micro-grid deployment for rural clusters.",
     email: "info@solaraenergy.com",
     placeOfStay: "Bengaluru, Karnataka",
