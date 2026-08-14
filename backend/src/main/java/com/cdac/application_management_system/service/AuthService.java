@@ -6,7 +6,13 @@ import com.cdac.application_management_system.dto.response.AuthResponseDTO;
 
 public interface AuthService {
 
-    AuthResponseDTO register(RegisterRequestDTO request);
+    void register(RegisterRequestDTO request);
 
     AuthResponseDTO login(LoginRequestDTO request);
+
+    void verifyEmail(String token);
+
+    AuthResponseDTO refresh(String refreshTokenValue);
+
+    void logout(String refreshTokenValue);
 }

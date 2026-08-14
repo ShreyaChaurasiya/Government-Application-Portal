@@ -51,8 +51,11 @@ public class ApplicationController {
     }
 
     @PostMapping("/{id}/submit")
-    public ApplicationResponseDTO submitApplication(@PathVariable Long id) {
-        return applicationService.submitApplication(id);
+    public ApplicationResponseDTO submitApplication(
+            @PathVariable Long id,
+            @RequestBody(required = false) ApplicationRequestDTO request) {
+
+        return applicationService.submitApplication(id, request);
     }
 
     @PostMapping("/{id}/approve")

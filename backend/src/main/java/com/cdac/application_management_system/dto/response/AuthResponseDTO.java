@@ -1,18 +1,40 @@
 package com.cdac.application_management_system.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.cdac.application_management_system.enums.UserRole;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class AuthResponseDTO {
 
     private String token;
+    private String refreshToken;
     private String name;
     private String email;
-    private String role;
+    private UserRole role;
+
+    public AuthResponseDTO(String token, String refreshToken, String name, String email, UserRole role) {
+        this.token = token;
+        this.refreshToken = refreshToken;
+        this.name = name;
+        this.email = email;
+        this.role = role;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
 }

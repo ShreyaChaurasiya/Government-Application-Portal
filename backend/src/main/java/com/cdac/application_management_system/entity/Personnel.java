@@ -32,9 +32,6 @@ public class Personnel {
     private String role;
 
     @Column
-    private String email;
-
-    @Column
     private String nationality;
 
     @Column

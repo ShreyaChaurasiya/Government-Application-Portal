@@ -16,8 +16,6 @@ public class PersonnelResponseDTO {
 
     private String role;
 
-    private String email;
-
     private String nationality;
 
     private String dob;

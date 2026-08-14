@@ -27,7 +27,7 @@ public class ApplicationRequestDTO {
 
     private String phoneNumber;
 
-    private boolean selfDeclaration;
+    private Boolean selfDeclaration;
 
     private List<PersonnelRequestDTO> personnel;
 

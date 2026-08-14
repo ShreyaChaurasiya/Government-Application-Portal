@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import com.cdac.application_management_system.dto.request.ApplicationRequestDTO;
 import com.cdac.application_management_system.dto.response.ApplicationResponseDTO;
-import com.cdac.application_management_system.entity.Application;
+import com.cdac.application_management_system.dto.response.ApplicationResponseDTO;
 import com.cdac.application_management_system.entity.Personnel;
 import com.cdac.application_management_system.entity.Declaration;
 import java.util.List;
@@ -57,31 +57,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         Application existingApplication = getApplicationEntityById(id);
 
-        existingApplication.setCompanyName(request.getCompanyName());
-        existingApplication.setAddress(request.getAddress());
-        existingApplication.setCountry(request.getCountry());
-        existingApplication.setProjectDescription(request.getProjectDescription());
-        existingApplication.setEmail(request.getEmail());
-        existingApplication.setPlaceOfStay(request.getPlaceOfStay());
-        existingApplication.setPhoneNumber(request.getPhoneNumber());
-        existingApplication.setSelfDeclaration(request.isSelfDeclaration());
-
-        existingApplication.getPersonnel().clear();
-        if (request.getPersonnel() != null) {
-            request.getPersonnel().forEach(personnelRequest -> {
-                Personnel personnel = modelMapper.map(personnelRequest, Personnel.class);
-                personnel.setApplication(existingApplication);
-                existingApplication.getPersonnel().add(personnel);
-            });
-        }
-
-        if (request.getDeclarations() != null) {
-            Declaration declaration = modelMapper.map(request.getDeclarations(), Declaration.class);
-            declaration.setApplication(existingApplication);
-            existingApplication.setDeclarations(declaration);
-        } else {
-            existingApplication.setDeclarations(null);
-        }
+        applyRequest(existingApplication, request);
 
         Application updatedApplication = applicationRepository.save(existingApplication);
 
@@ -110,12 +86,16 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public ApplicationResponseDTO submitApplication(Long id) {
+    public ApplicationResponseDTO submitApplication(Long id, ApplicationRequestDTO request) {
 
         Application application = getApplicationEntityById(id);
 
         if (application.getStatus() != ApplicationStatus.DRAFT) {
             throw new RuntimeException("Only draft applications can be submitted.");
+        }
+
+        if (request != null) {
+            applyRequest(application, request);
         }
 
         validateForSubmission(application);
@@ -125,6 +105,34 @@ public class ApplicationServiceImpl implements ApplicationService {
         Application updatedApplication = applicationRepository.save(application);
 
         return modelMapper.map(updatedApplication, ApplicationResponseDTO.class);
+    }
+
+    private void applyRequest(Application application, ApplicationRequestDTO request) {
+        application.setCompanyName(request.getCompanyName());
+        application.setAddress(request.getAddress());
+        application.setCountry(request.getCountry());
+        application.setProjectDescription(request.getProjectDescription());
+        application.setEmail(request.getEmail());
+        application.setPlaceOfStay(request.getPlaceOfStay());
+        application.setPhoneNumber(request.getPhoneNumber());
+        application.setSelfDeclaration(Boolean.TRUE.equals(request.getSelfDeclaration()));
+
+        application.getPersonnel().clear();
+        if (request.getPersonnel() != null) {
+            request.getPersonnel().forEach(personnelRequest -> {
+                Personnel personnel = modelMapper.map(personnelRequest, Personnel.class);
+                personnel.setApplication(application);
+                application.getPersonnel().add(personnel);
+            });
+        }
+
+        if (request.getDeclarations() != null) {
+            Declaration declaration = modelMapper.map(request.getDeclarations(), Declaration.class);
+            declaration.setApplication(application);
+            application.setDeclarations(declaration);
+        } else {
+            application.setDeclarations(null);
+        }
     }
 
     private void validateForSubmission(Application application) {

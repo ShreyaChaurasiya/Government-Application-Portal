@@ -17,8 +17,6 @@ public class PersonnelRequestDTO {
 
     private String role;
 
-    private String email;
-
     private String nationality;
 
     private LocalDate dateOfBirth;

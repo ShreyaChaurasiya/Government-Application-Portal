@@ -18,7 +18,7 @@ public interface ApplicationService {
 
     ApplicationResponseDTO updateApplication(Long id, ApplicationRequestDTO request);
 
-    ApplicationResponseDTO submitApplication(Long id);
+    ApplicationResponseDTO submitApplication(Long id, ApplicationRequestDTO request);
 
     ApplicationResponseDTO approveApplication(Long id, String remarks);
 

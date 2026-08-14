@@ -76,8 +76,5 @@ public class Application {
     @JoinColumn(name = "declaration_id")
     private Declaration declarations;
 
-
-
-
-
 }
+
