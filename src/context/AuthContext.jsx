@@ -1,7 +1,12 @@
-import { createContext, useContext, useState } from "react";
+import { useState } from "react";
 import { clearStoredUser, readStoredUser, writeStoredUser } from "../utils/authStorage";
+import { AuthContext } from "./auth-context";
 
-const AuthContext = createContext(null);
+function normalizeRole(role) {
+  if (typeof role === "string") return role;
+  if (role?.name) return role.name;
+  return role;
+}
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => readStoredUser());
@@ -9,9 +14,10 @@ export function AuthProvider({ children }) {
   const login = (data) => {
     const nextUser = {
       token: data.token,
+      refreshToken: data.refreshToken,
       name: data.name,
       email: data.email,
-      role: data.role,
+      role: normalizeRole(data.role),
     };
     writeStoredUser(nextUser);
     setUser(nextUser);
@@ -27,12 +33,4 @@ export function AuthProvider({ children }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within AuthProvider");
-  }
-  return context;
 }

@@ -30,7 +30,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
-        System.out.println(">>> JwtFilter hit: " + request.getMethod() + " " + request.getRequestURI() + " | Authorization header present: " + (header != null));
+        System.out.println(">>> JwtFilter: " + request.getMethod() + " " + request.getRequestURI());
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             try {

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { LogOut } from "lucide-react";
 import PortalLogo from "../components/PortalLogo";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
+import { logoutApi } from "../services/authService";
 import { getApplications } from "../services/applicationService";
 import ApplicantView from "../applicant/ApplicantView";
 import ReviewerView from "../reviewer/ReviewerView";
@@ -9,7 +10,18 @@ import ReviewerView from "../reviewer/ReviewerView";
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const [applications, setApplications] = useState([]);
- 
+
+  const handleLogout = async () => {
+    if (user?.refreshToken) {
+      try {
+        await logoutApi(user.refreshToken);
+      } catch {
+        // Clear local session even if the server call fails.
+      }
+    }
+    logout();
+  };
+
   useEffect(() => {
     getApplications()
       .then((res) => setApplications(res.data))
@@ -30,7 +42,7 @@ export default function Dashboard() {
             <span className="text-sm" style={{ color: "var(--ink-soft)" }}>
               {user?.name} · <span className="font-mono text-xs">{isReviewer ? "Reviewer" : "Applicant"}</span>
             </span>
-            <button onClick={logout} className="btn-outline inline-flex items-center gap-1.5">
+            <button onClick={handleLogout} className="btn-outline inline-flex items-center gap-1.5">
               <LogOut size={14} /> Log out
             </button>
           </div>

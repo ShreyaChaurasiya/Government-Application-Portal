@@ -11,50 +11,46 @@ import org.springframework.stereotype.Service;
 public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender mailSender;
+    private final String verificationUrl;
+    private final boolean devSkipEmail;
 
-    @Value("${app.verification-url}")
-    private String verificationUrl;
-
-    public EmailServiceImpl(JavaMailSender mailSender) {
+    public EmailServiceImpl(
+            JavaMailSender mailSender,
+            @Value("${app.verification-url}") String verificationUrl,
+            @Value("${app.dev-skip-email:false}") boolean devSkipEmail) {
         this.mailSender = mailSender;
+        this.verificationUrl = verificationUrl;
+        this.devSkipEmail = devSkipEmail;
     }
 
     @Override
-    public void sendVerificationEmail(
-            PortalUser user,
-            String verificationToken
-    ) {
-
-        String verificationLink =
-                verificationUrl + "?token=" + verificationToken;
+    public void sendVerificationEmail(PortalUser user, String verificationToken) {
+        String verificationLink = verificationUrl + "?token=" + verificationToken;
 
         System.out.println("=================================");
-        System.out.println("SENDING VERIFICATION EMAIL");
-        System.out.println("TO: " + user.getEmail());
-        System.out.println("LINK: " + verificationLink);
+        System.out.println("VERIFICATION LINK FOR " + user.getEmail());
+        System.out.println(verificationLink);
         System.out.println("=================================");
+
+        if (devSkipEmail) {
+            return;
+        }
 
         SimpleMailMessage message = new SimpleMailMessage();
-
         message.setTo(user.getEmail());
-
-        message.setSubject(
-                "Verify your Application Management System account"
-        );
-
+        message.setSubject("Verify your Application Portal account");
         message.setText(
                 "Hello " + user.getName() + ",\n\n" +
-                        "Thank you for registering with the Application Management System.\n\n" +
-                        "Please verify your email address by clicking the link below:\n\n" +
+                        "Please verify your email by opening this link:\n\n" +
                         verificationLink + "\n\n" +
-                        "This verification link is valid for 24 hours.\n\n" +
-                        "If you did not create this account, you can ignore this email.\n\n" +
-                        "Regards,\n" +
-                        "Application Management System"
+                        "This link is valid for 24 hours.\n\n" +
+                        "Application Portal"
         );
 
-        mailSender.send(message);
-
-        System.out.println("EMAIL SEND COMPLETED");
+        try {
+            mailSender.send(message);
+        } catch (Exception ex) {
+            System.err.println("Could not send email. Use the verification link printed above.");
+        }
     }
 }

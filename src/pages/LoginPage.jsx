@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import PortalLogo from "../components/PortalLogo";
 import inputClass from "../utils/inputClass";
 import { login as loginApi } from "../services/authService";
 import { getApiErrorMessage } from "../utils/apiError";
-import { useAuth } from "../context/AuthContext";
- 
+import { useAuth } from "../hooks/useAuth";
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,6 +13,8 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const successMessage = location.state?.message;
  
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,7 +52,13 @@ export default function LoginPage() {
           <p className="text-sm mb-6" style={{ color: "var(--ink-soft)" }}>
             Sign in to register your company or continue an existing application.
           </p>
- 
+
+          {successMessage && (
+            <p className="text-sm mb-4 card-panel p-3" style={{ color: "var(--approve)" }}>
+              {successMessage}
+            </p>
+          )}
+
           <form onSubmit={handleSubmit} className="card-panel p-6">
             <label className="block text-sm mb-1.5" style={{ color: "var(--ink-soft)" }}>Email</label>
             <input

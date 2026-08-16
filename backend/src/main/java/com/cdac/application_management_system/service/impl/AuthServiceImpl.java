@@ -10,6 +10,7 @@ import com.cdac.application_management_system.repository.RefreshTokenRepository;
 import com.cdac.application_management_system.security.JwtUtil;
 import com.cdac.application_management_system.service.AuthService;
 import com.cdac.application_management_system.service.EmailService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +27,22 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final EmailService emailService;
+    private final boolean devAutoVerify;
 
     public AuthServiceImpl(
             PortalUserRepository userRepository,
             RefreshTokenRepository refreshTokenRepository,
             PasswordEncoder passwordEncoder,
             JwtUtil jwtUtil,
-            EmailService emailService) {
+            EmailService emailService,
+            @Value("${app.dev-auto-verify:false}") boolean devAutoVerify) {
 
         this.userRepository = userRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.emailService = emailService;
+        this.devAutoVerify = devAutoVerify;
     }
 
     @Override
@@ -61,18 +65,21 @@ public class AuthServiceImpl implements AuthService {
         user.setCompanyName(normalizeOptionalText(request.getCompanyName()));
         user.setRole(request.getRole() == null ? com.cdac.application_management_system.enums.UserRole.APPLICANT : request.getRole());
 
-        String verificationToken = UUID.randomUUID().toString();
+        if (devAutoVerify) {
+            user.setVerified(Boolean.TRUE);
+            user.setVerificationToken(null);
+            user.setVerificationTokenExpiresAt(null);
+        } else {
+            String verificationToken = UUID.randomUUID().toString();
+            user.setVerificationToken(verificationToken);
+            user.setVerificationTokenExpiresAt(LocalDateTime.now().plusHours(24));
+            user.setVerified(Boolean.FALSE);
+            PortalUser savedUser = userRepository.save(user);
+            emailService.sendVerificationEmail(savedUser, verificationToken);
+            return;
+        }
 
-        user.setVerificationToken(verificationToken);
-        user.setVerificationTokenExpiresAt(
-                LocalDateTime.now().plusHours(24)
-        );
-        user.setVerified(Boolean.FALSE);
-
-        PortalUser savedUser = userRepository.save(user);
-
-        // Send verification email
-        emailService.sendVerificationEmail(savedUser, verificationToken);
+        userRepository.save(user);
     }
 
     @Override

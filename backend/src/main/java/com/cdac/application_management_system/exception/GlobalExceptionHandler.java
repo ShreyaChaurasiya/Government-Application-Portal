@@ -1,4 +1,4 @@
-package com.cdac.application_management_system.error;
+package com.cdac.application_management_system.exception;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
