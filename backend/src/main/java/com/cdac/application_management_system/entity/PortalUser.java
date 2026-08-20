@@ -34,6 +34,15 @@ public class PortalUser {
     @Column(name = "company_name")
     private String companyName;
 
+    @Column(length = 15)
+    private String phoneNumber;
+
+    @Column(nullable = false)
+    private Boolean emailVerified = Boolean.FALSE;
+
+    @Column(nullable = false)
+    private Boolean phoneVerified = Boolean.FALSE;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
@@ -139,5 +148,29 @@ public class PortalUser {
 
     public void setVerificationTokenExpiresAt(LocalDateTime verificationTokenExpiresAt) {
         this.verificationTokenExpiresAt = verificationTokenExpiresAt;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public Boolean getPhoneVerified() {
+        return phoneVerified;
+    }
+
+    public void setPhoneVerified(Boolean phoneVerified) {
+        this.phoneVerified = phoneVerified;
     }
 }

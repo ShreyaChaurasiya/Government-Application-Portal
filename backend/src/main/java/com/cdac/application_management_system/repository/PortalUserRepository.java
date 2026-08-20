@@ -11,5 +11,7 @@ public interface PortalUserRepository extends JpaRepository<PortalUser, Long> {
 
     boolean existsByEmailIgnoreCase(String email);
 
+    boolean existsByPhoneNumber(String phoneNumber);
+
     Optional<PortalUser> findByVerificationToken(String token);
 }

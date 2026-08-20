@@ -17,9 +17,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
+
+    private static final Logger log = LoggerFactory.getLogger(JwtFilter.class);
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -30,11 +34,12 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
-        System.out.println(">>> JwtFilter: " + request.getMethod() + " " + request.getRequestURI());
+        log.debug("JWT filter: {} {}", request.getMethod(), request.getRequestURI());
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             try {
                 if (!jwtUtil.validateToken(token)) {
+                    log.warn("JWT validation failed for {} {}", request.getMethod(), request.getRequestURI());
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
                     return;
                 }
@@ -43,14 +48,17 @@ public class JwtFilter extends OncePerRequestFilter {
                 Optional<PortalUser> userOpt = userRepository.findByEmailIgnoreCase(email);
                 if (userOpt.isPresent()) {
                     PortalUser user = userOpt.get();
+                    log.debug("Authenticated userId={} role={} for {}", user.getId(), user.getRole(), request.getRequestURI());
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                             user, null, List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())));
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 } else {
+                    log.warn("JWT user not found for email={}", email);
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not found");
                     return;
                 }
             } catch (Exception ex) {
+                log.warn("JWT processing error for {} {}: {}", request.getMethod(), request.getRequestURI(), ex.getMessage());
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
                 return;
             }

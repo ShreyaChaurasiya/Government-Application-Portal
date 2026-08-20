@@ -2,11 +2,14 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PortalLogo from "../components/PortalLogo";
 import inputClass from "../utils/inputClass";
+import CaptchaField from "../components/CaptchaField";
 import { signup as signupApi } from "../services/authService";
 import { getApiErrorMessage } from "../utils/apiError";
 
 export default function SignupPage() {
-  const [form, setForm] = useState({ name: "", email: "", password: "", role: "APPLICANT" });
+  const [form, setForm] = useState({ name: "", email: "", phoneNumber: "", password: "", companyName: "" });
+  const [captchaId, setCaptchaId] = useState("");
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -18,10 +21,17 @@ export default function SignupPage() {
     setError("");
     setSubmitting(true);
     try {
-      await signupApi(form);
-      navigate("/login", {
+      const response = await signupApi({
+        ...form,
+        captchaId,
+        captchaAnswer,
+      });
+      navigate("/verify-otp", {
         state: {
-          message: "Account created. Sign in to continue to company registration.",
+          userId: response.data.userId,
+          emailOtp: response.data.emailOtp,
+          phoneOtp: response.data.phoneOtp,
+          message: response.data.message,
         },
       });
     } catch (err) {
@@ -45,11 +55,9 @@ export default function SignupPage() {
       <div className="flex-1 flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm">
           <p className="font-mono text-xs tracking-widest uppercase mb-2" style={{ color: "var(--brass)" }}>Step 1 — Sign up</p>
-          <h1 className="font-display text-2xl font-semibold mb-2" style={{ color: "var(--ink)" }}>
-            Create your account
-          </h1>
+          <h1 className="font-display text-2xl font-semibold mb-2" style={{ color: "var(--ink)" }}>Create your account</h1>
           <p className="text-sm mb-6" style={{ color: "var(--ink-soft)" }}>
-            After this, log in and register your company project.
+            Register with email and mobile OTP verification for a secure portal account.
           </p>
 
           <form onSubmit={handleSubmit} className="card-panel p-6">
@@ -58,6 +66,17 @@ export default function SignupPage() {
 
             <label className="block text-sm mb-1.5 mt-4" style={{ color: "var(--ink-soft)" }}>Email</label>
             <input type="email" required className={inputClass(false)} value={form.email} onChange={set("email")} placeholder="name@company.com" />
+
+            <label className="block text-sm mb-1.5 mt-4" style={{ color: "var(--ink-soft)" }}>Mobile number</label>
+            <input
+              required
+              pattern="[0-9]{10}"
+              maxLength={10}
+              className={inputClass(false)}
+              value={form.phoneNumber}
+              onChange={set("phoneNumber")}
+              placeholder="10-digit mobile number"
+            />
 
             <label className="block text-sm mb-1.5 mt-4" style={{ color: "var(--ink-soft)" }}>Password</label>
             <input
@@ -70,30 +89,20 @@ export default function SignupPage() {
               placeholder="At least 8 characters with letters and numbers"
             />
 
-            <label className="block text-sm mb-1.5 mt-4" style={{ color: "var(--ink-soft)" }}>Account type</label>
-            <div className="flex gap-4">
-              {[
-                { value: "APPLICANT", label: "Applicant" },
-                { value: "REVIEWER", label: "Reviewer" },
-              ].map((opt) => (
-                <label key={opt.value} className="inline-flex items-center gap-2 text-sm" style={{ color: "var(--ink)" }}>
-                  <input
-                    type="radio"
-                    name="role"
-                    value={opt.value}
-                    checked={form.role === opt.value}
-                    onChange={set("role")}
-                    style={{ accentColor: "var(--accent)" }}
-                  />
-                  {opt.label}
-                </label>
-              ))}
-            </div>
+            <label className="block text-sm mb-1.5 mt-4" style={{ color: "var(--ink-soft)" }}>Company name (optional)</label>
+            <input className={inputClass(false)} value={form.companyName} onChange={set("companyName")} placeholder="Your organisation" />
+
+            <CaptchaField
+              captchaId={captchaId}
+              captchaAnswer={captchaAnswer}
+              onCaptchaId={setCaptchaId}
+              onCaptchaAnswer={setCaptchaAnswer}
+            />
 
             {error && <p className="text-sm mt-3" style={{ color: "var(--reject)" }}>{error}</p>}
 
             <button type="submit" disabled={submitting} className="btn-primary w-full mt-6">
-              {submitting ? "Creating account…" : "Create account"}
+              {submitting ? "Creating account…" : "Continue to verification"}
             </button>
           </form>
 

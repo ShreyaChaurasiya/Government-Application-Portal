@@ -1,8 +1,8 @@
 package com.cdac.application_management_system.dto.request;
 
-import com.cdac.application_management_system.enums.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class RegisterRequestDTO {
@@ -14,13 +14,21 @@ public class RegisterRequestDTO {
     @NotBlank(message = "Email is required.")
     private String email;
 
+    @NotBlank(message = "Phone number is required.")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits.")
+    private String phoneNumber;
+
     @Size(min = 8, message = "Password must be at least 8 characters.")
     @NotBlank(message = "Password is required.")
     private String password;
 
     private String companyName;
 
-    private UserRole role;
+    @NotBlank(message = "Captcha id is required.")
+    private String captchaId;
+
+    @NotBlank(message = "Captcha answer is required.")
+    private String captchaAnswer;
 
     public String getName() {
         return name;
@@ -38,6 +46,14 @@ public class RegisterRequestDTO {
         this.email = email;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -46,19 +62,27 @@ public class RegisterRequestDTO {
         this.password = password;
     }
 
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
-
     public String getCompanyName() {
         return companyName;
     }
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public String getCaptchaId() {
+        return captchaId;
+    }
+
+    public void setCaptchaId(String captchaId) {
+        this.captchaId = captchaId;
+    }
+
+    public String getCaptchaAnswer() {
+        return captchaAnswer;
+    }
+
+    public void setCaptchaAnswer(String captchaAnswer) {
+        this.captchaAnswer = captchaAnswer;
     }
 }

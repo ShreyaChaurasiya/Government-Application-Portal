@@ -3,9 +3,9 @@ package com.cdac.application_management_system.service;
 import com.cdac.application_management_system.entity.PortalUser;
 import com.cdac.application_management_system.enums.OtpType;
 
-public interface EmailService {
+public interface OtpService {
 
-    void sendVerificationEmail(PortalUser user, String verificationToken);
+    String issueOtp(PortalUser user, OtpType type);
 
-    void sendOtpEmail(PortalUser user, String otpCode, OtpType type);
+    void verifyOtp(Long userId, OtpType type, String code);
 }

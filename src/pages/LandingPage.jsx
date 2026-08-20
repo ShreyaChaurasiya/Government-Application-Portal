@@ -78,9 +78,8 @@ export default function LandingPage() {
             One file, from application to decision.
           </h1>
           <p className="text-[15px] leading-relaxed mb-8" style={{ color: "var(--ink-soft)" }}>
-            Create an account, sign in, then register your company&apos;s project and track
-            every application through review — in one place, without emailing
-            documents back and forth.
+            A secure government portal with email &amp; mobile OTP verification, captcha protection,
+            and role-based access for applicants and CDAC reviewers.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Link to="/signup" className="btn-primary inline-flex items-center gap-1.5">

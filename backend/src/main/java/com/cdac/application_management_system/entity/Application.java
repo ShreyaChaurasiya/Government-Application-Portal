@@ -56,6 +56,9 @@ public class Application {
     @Column(length = 500)
     private String remarks;
 
+    @Column(name = "applicant_id")
+    private Long applicantId;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

@@ -3,14 +3,11 @@ package com.cdac.application_management_system.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public class LoginRequestDTO {
+public class ForgotPasswordRequestDTO {
 
     @Email(message = "Enter a valid email address.")
     @NotBlank(message = "Email is required.")
     private String email;
-
-    @NotBlank(message = "Password is required.")
-    private String password;
 
     @NotBlank(message = "Captcha id is required.")
     private String captchaId;
@@ -24,14 +21,6 @@ public class LoginRequestDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getCaptchaId() {
